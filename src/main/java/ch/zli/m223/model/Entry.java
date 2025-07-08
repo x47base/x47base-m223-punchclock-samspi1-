@@ -42,4 +42,14 @@ public class Entry {
   public void setCheckOut(LocalDateTime checkOut) {
     this.checkOut = checkOut;
   }
+
+  private String description;
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
 }

@@ -16,6 +16,8 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import ch.zli.m223.model.Entry;
+import ch.zli.m223.dto.EntryDto;
+import ch.zli.m223.dto.EntryMapper;
 import ch.zli.m223.service.EntryService;
 
 @Path("/entries")
@@ -28,16 +30,17 @@ public class EntryController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Index all Entries.", description = "Returns a list of all entries.")
-    public List<Entry> index() {
-        return entryService.findAll();
+    public List<EntryDto> index() {
+        return entryService.findAll().stream().map(EntryMapper::toDto).toList();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Creates a new entry.", description = "Creates a new entry and returns the newly added entry.")
-    public void create(Entry entry) {
-       entryService.createEntry(entry);
+    public void create(EntryDto entryDto) {
+        Entry entry = EntryMapper.toEntity(entryDto);
+        entryService.createEntry(entry);
     }
 
     @DELETE
@@ -52,7 +55,9 @@ public class EntryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Edit an entry.", description = "Edit a specific entry by id.")
-    public Entry edit(Long id, Entry entry) {
-        return entryService.editEntry(id, entry);
+    public EntryDto edit(Long id, EntryDto entryDto) {
+        Entry entry = EntryMapper.toEntity(entryDto);
+        Entry updated = entryService.editEntry(id, entry);
+        return EntryMapper.toDto(updated);
     }
 }
