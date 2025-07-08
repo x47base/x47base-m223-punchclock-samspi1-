@@ -20,17 +20,25 @@ public class EntryService {
         return entry;
     }
 
+    public Entry findEntry(Long id) {
+        return entityManager.find(Entry.class, id);
+    }
+
     public List<Entry> findAll() {
         var query = entityManager.createQuery("FROM Entry", Entry.class);
         return query.getResultList();
     }
 
-    public Boolean deleteEntry (int id) {
-        Entry entry = entityManager.find(Entry.class, id);
-        if (entry != null) {
-            entityManager.remove(entry);
-            return true;
+    public void deleteEntry(Long id) {
+        var entity = findEntry(id);
+        entityManager.remove(entity);
+    }
+
+    @Transactional
+    public Entry editEntry(Long id, Entry entry) {
+        if (entry.getId() != id) {
+            throw new IllegalArgumentException("Ids do not match");
         }
-        return false;
+        return entityManager.merge(entry);
     }
 }
