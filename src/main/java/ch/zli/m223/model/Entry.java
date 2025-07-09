@@ -45,6 +45,34 @@ public class Entry {
 
   private String description;
 
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
+
+  @ManyToMany
+  @JoinTable(
+    name = "entry_tag",
+    joinColumns = @JoinColumn(name = "entry_id"),
+    inverseJoinColumns = @JoinColumn(name = "tag_id")
+  )
+  private java.util.List<Tag> tags;
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+  public java.util.List<Tag> getTags() {
+    return tags;
+  }
+
+  public void setTags(java.util.List<Tag> tags) {
+    this.tags = tags;
+  }
+
   public String getDescription() {
     return description;
   }
