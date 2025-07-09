@@ -1,6 +1,7 @@
 package ch.zli.m223.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,6 +14,14 @@ import ch.zli.m223.model.Entry;
 public class EntryService {
     @Inject
     private EntityManager entityManager;
+
+    @Inject
+    TimeSummaryService timeSummaryService;
+
+    public Map<String, String> getTimeSummaries() {
+        List<Entry> entries = findAll();
+        return timeSummaryService.calculateSummaryPerDay(entries);
+    }
 
     @Transactional
     public Entry createEntry(Entry entry) {
